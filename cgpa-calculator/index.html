@@ -1,0 +1,100 @@
+<div style="max-width:420px;margin:auto;padding:24px;background:#111827;color:#ffffff;border-radius:20px;font-family:Arial, sans-serif;box-shadow:0 8px 24px rgba(0,0,0,0.3);">
+  
+  <h2 style="text-align:center;margin-bottom:20px;font-size:26px;font-weight:700;">
+    Know Your CGPA from GPA
+  </h2>
+
+  <select id="regulation" style="width:100%;padding:12px;margin-bottom:15px;background:#1f2937;color:white;border:1px solid #374151;border-radius:10px;font-size:16px;outline:none;">
+    <option value="">Choose Regulation</option>
+    <option>2025 Regulation</option>
+    <option>2021 Regulation</option>
+    <option>2017 Regulation</option>
+  </select>
+
+  <select id="semesterCount" onchange="createInputs()" style="width:100%;padding:12px;margin-bottom:15px;background:#1f2937;color:white;border:1px solid #374151;border-radius:10px;font-size:16px;outline:none;">
+    <option value="">Select Semester Completed</option>
+    <option value="1">1 Semester</option>
+    <option value="2">2 Semesters</option>
+    <option value="3">3 Semesters</option>
+    <option value="4">4 Semesters</option>
+    <option value="5">5 Semesters</option>
+    <option value="6">6 Semesters</option>
+    <option value="7">7 Semesters</option>
+    <option value="8">8 Semesters</option>
+  </select>
+
+  <div id="gpaInputs"></div>
+
+  <button onclick="calculateCGPA()" style="width:100%;padding:14px;margin-top:15px;background:#ffffff;color:#111827;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;">
+    Calculate CGPA
+  </button>
+
+  <h3 id="result" style="text-align:center;margin-top:20px;font-size:22px;font-weight:600;color:#ffffff;"></h3>
+</div>
+
+<script>
+function createInputs() {
+  let count = document.getElementById("semesterCount").value;
+  let container = document.getElementById("gpaInputs");
+  container.innerHTML = "";
+
+  if (!count) return;
+
+  for (let i = 1; i <= count; i++) {
+    container.innerHTML += `
+      <input 
+        type="number" 
+        step="0.01"
+        min="0"
+        max="10"
+        id="gpa${i}" 
+        placeholder="Enter Semester ${i} GPA"
+        style="
+          width:100%;
+          padding:12px;
+          margin-bottom:12px;
+          background:#1f2937;
+          color:white;
+          border:1px solid #374151;
+          border-radius:10px;
+          font-size:16px;
+          outline:none;
+          box-sizing:border-box;
+        "
+      />
+    `;
+  }
+}
+
+function calculateCGPA() {
+  let count = document.getElementById("semesterCount").value;
+  let regulation = document.getElementById("regulation").value;
+  let result = document.getElementById("result");
+
+  if (!regulation) {
+    result.innerText = "Please choose regulation";
+    return;
+  }
+
+  if (!count) {
+    result.innerText = "Please select semesters completed";
+    return;
+  }
+
+  let total = 0;
+
+  for (let i = 1; i <= count; i++) {
+    let value = parseFloat(document.getElementById("gpa" + i).value);
+
+    if (isNaN(value) || value < 0 || value > 10) {
+      result.innerText = "Please provide valid input";
+      return;
+    }
+
+    total += value;
+  }
+
+  let cgpa = (total / count).toFixed(2);
+  result.innerText = "Your CGPA: " + cgpa;
+}
+</script>
